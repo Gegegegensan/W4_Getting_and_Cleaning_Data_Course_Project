@@ -6,7 +6,7 @@ The script consists of 5 steps based on the given instruction.
 4. Appropriately labels the data set with descriptive variable names. 
 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 
-The detailed operations for each step are commented on run_analysis.R file.
+The detailed operations for each step are below. 
 
 
 ### Read all the datasets and assign them to variables
@@ -133,7 +133,7 @@ consolidated_all_dataset <- consolidated_all_dataset[, c(-3, -4)]
 colnames(consolidated_all_dataset) <- features
 ```
 
-### Export the data table to this text file : run_analysis_result.txt""
+### Set the output location and export the data table to this text file : run_analysis_result.txt
 ```
 setwd("C:\\projects\\github\\W4_Getting_and_Cleaning_Data_Course_Project")
 write.table(consolidated_all_dataset, file="run_analysis_result.txt", row.name=FALSE)
