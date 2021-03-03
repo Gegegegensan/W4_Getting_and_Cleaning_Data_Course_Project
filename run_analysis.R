@@ -10,7 +10,6 @@ test <- read.table("C:\\projects\\github\\R-projects\\1_gettingData\\UCI HAR Dat
 train_label <- read.table("C:\\projects\\github\\R-projects\\1_gettingData\\UCI HAR Dataset\\train\\y_train.txt")
 test_label <- read.table("C:\\projects\\github\\R-projects\\1_gettingData\\UCI HAR Dataset\\test\\y_test.txt")
 
-features <- read.table("C:\\projects\\github\\R-projects\\1_gettingData\\UCI HAR Dataset\\features.txt")
 activity_labels <- read.table("C:\\projects\\github\\R-projects\\1_gettingData\\UCI HAR Dataset\\activity_labels.txt")
 
 subject_train <- read.table("C:\\projects\\github\\R-projects\\1_gettingData\\UCI HAR Dataset\\train\\subject_train.txt")
@@ -48,11 +47,11 @@ labeled_train <- cbind(train_label, train)
 labeled_test <- cbind(test_label, test)
 
 # Extract the names of the features
+features <- read.table("C:\\projects\\github\\R-projects\\1_gettingData\\UCI HAR Dataset\\features.txt")
 features <- features[,2]
 
 # Name the features column "activity_labels" (Replace the numbers with the actual names later)
-levels(features)[1] <- "activity_labels"
-features[1] <- "activity_labels"
+features <- append("activity_labels", features)
 
 ### 4. Appropriately labels the data set with descriptive variable names. 
 
@@ -87,14 +86,18 @@ subject_data <- rbind(subject_train, subject_test)
 all_dataset <- cbind(subject_data, all_dataset)
 
 # Replace the numbers on subject_data with 
-levels(features)[1] <- "subject"
-features[1] <- "subject"
+features <- append("subject", features)
 colnames(all_dataset)<- features
 
-### 5. From the data set in step 4, creates a second,  independent tidy data set with the average of each variable 
+### 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable 
 ### for each activity and each subject.
 
-consolidated_all_dataset <- aggregate(all_dataset, by=list(all_dataset[, 2], all_dataset[, 1]), FUN=mean)
+consolidated_all_dataset <- aggregate(all_dataset, by=list(all_dataset[, 1], all_dataset[, 2]), FUN=mean, na.rm=TRUE)
+consolidated_all_dataset <- consolidated_all_dataset[, c(-3, -4)]
+colnames(consolidated_all_dataset) <- features
+
+# Export the data table to this text file : run_analysis_result.txt""
 
 setwd("C:\\projects\\github\\W4_Getting_and_Cleaning_Data_Course_Project")
 write.table(consolidated_all_dataset, file="run_analysis_result.txt", row.name=FALSE)
+
