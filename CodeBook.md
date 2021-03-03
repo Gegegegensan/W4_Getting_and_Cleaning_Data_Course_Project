@@ -64,6 +64,6 @@ all_dataset ... combined data table (labeled_train and labeled_test from above) 
 ```
 
 ```
-consolidated_all_dataset ... grouped aggregated data table based on "activity_labels" and "subject" values from all_data
+consolidated_all_dataset ... grouped aggregated data table based on "activity_labels" and "subject" values from all_data with the average of each variable for each activity and each subject
 ```
 
