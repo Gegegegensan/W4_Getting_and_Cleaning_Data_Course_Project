@@ -3,7 +3,6 @@
 library(dplyr)
 library(tidyr)
 library(data.table)
-setwd("C:\\projects\\github\\R-projects\\1_gettingData\\UCI HAR Dataset")
 
 resourceUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 
@@ -24,41 +23,80 @@ subject_test <- read.table("C:\\projects\\github\\R-projects\\1_gettingData\\UCI
 merged_data <- rbind(train, test)
 
 
-### 2. Extracts only the measurements on the mean and standard deviation 
-### for each measurement. 
+### 2. Extracts only the measurements on the mean and standard deviation for each measurement. 
 
+# Create a blank matrix to store mean
 mean <- matrix(data=NA, nrow=1, ncol=ncol(merged_data))
+
+# Fill each cell per column with mean
 for (i in 1:ncol(merged_data)) {
   mean[1, i] <- mean(merged_data[, i])
 }
 
+# Create a blank matrix to store standard deviation
 std <- matrix(data=NA, nrow=1, ncol=ncol(merged_data))
+
+# Fill each cell per column with standard deviation
 for (i in 1:ncol(merged_data)) {
   std[1, i] <- sd(merged_data[, i])
 }
 
 ### 3. Uses descriptive activity names to name the activities in the data set
 
-labeled_train <- cbind(train, train_label)
-labeled_test <- cbind(test, test_label)
+# Combine train dataset with the label
+labeled_train <- cbind(train_label, train)
 
+# Combine test dataset with the label
+labeled_test <- cbind(test_label, test)
+
+# Extract the names of the features
 features <- features[,2]
+
+# Name the features column "activity_labels" (Replace the numbers with the actual names later)
+levels(features)[1] <- "activity_labels"
+features[1] <- "activity_labels"
 
 ### 4. Appropriately labels the data set with descriptive variable names. 
 
+# Add column names on labeled_train dataset corresponding to the names of the features
+colnames(labeled_train) <- features
 
+# Add column names on labeled_test dataset corresponding to the names of the features
+colnames(labeled_test) <- features
 
+# Combine labeled_train dataset and labeled_test dataset
+all_dataset <- rbind(labeled_train, labeled_test)
 
-### 5. From the data set in step 4, creates a second, 
-### independent tidy data set with the average of each variable 
+# Replace the numbers in activity_labels with the actual value on activity_labels table
+for (i in 1:nrow(all_dataset)) {
+  if (all_dataset[i, 1] == 1) {
+    all_dataset[i,1] <- activity_labels[, 2][1]
+  } else if (all_dataset[i, 1] == 2) {
+    all_dataset[i, 1] <- activity_labels[, 2][2]
+  } else if (all_dataset[i, 1] == 3) {
+    all_dataset[i, 1] <- activity_labels[, 2][3]
+  } else if (all_dataset[i, 1] == 4) {
+    all_dataset[i, 1] <- activity_labels[, 2][4]
+  } else if (all_dataset[i, 1] == 5) {
+    all_dataset[i, 1] <- activity_labels[, 2][5]
+  } else if (all_dataset[i, 1] == 6) {
+    all_dataset[i, 1] <- activity_labels[, 2][6]
+  }
+}
+
+# Consolidating subject data with all_dataset
+subject_data <- rbind(subject_train, subject_test)
+all_dataset <- cbind(subject_data, all_dataset)
+
+# Replace the numbers on subject_data with 
+levels(features)[1] <- "subject"
+features[1] <- "subject"
+colnames(all_dataset)<- features
+
+### 5. From the data set in step 4, creates a second,  independent tidy data set with the average of each variable 
 ### for each activity and each subject.
 
+consolidated_all_dataset <- aggregate(all_dataset, by=list(all_dataset[, 2], all_dataset[, 1]), FUN=mean)
 
-
-
-
-
-
-
-
-
+setwd("C:\\projects\\github\\W4_Getting_and_Cleaning_Data_Course_Project")
+write.table(consolidated_all_dataset, file="run_analysis_result.txt", row.name=FALSE)
