@@ -1,11 +1,9 @@
 ## Preparation
 
-library(dplyr)
-library(tidyr)
-library(data.table)
-
+# For data source reference
 resourceUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 
+# Read all the datasets and assign them to variables
 train <- read.table("C:\\projects\\github\\R-projects\\1_gettingData\\UCI HAR Dataset\\train\\X_train.txt")
 test <- read.table("C:\\projects\\github\\R-projects\\1_gettingData\\UCI HAR Dataset\\test\\X_test.txt")
 
