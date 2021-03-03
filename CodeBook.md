@@ -1,89 +1,69 @@
 # CodeBook
 
-
-
-
-```
-train <- read.table("C:\\projects\\github\\R-projects\\1_gettingData\\UCI HAR Dataset\\train\\X_train.txt")
-```
-
-```
-test <- read.table("C:\\projects\\github\\R-projects\\1_gettingData\\UCI HAR Dataset\\test\\X_test.txt")
-```
-
-```
-train_label <- read.table("C:\\projects\\github\\R-projects\\1_gettingData\\UCI HAR Dataset\\train\\y_train.txt")
-```
-
-```
-test_label <- read.table("C:\\projects\\github\\R-projects\\1_gettingData\\UCI HAR Dataset\\test\\y_test.txt")
-```
-
-```
-activity_labels <- read.table("C:\\projects\\github\\R-projects\\1_gettingData\\UCI HAR Dataset\\activity_labels.txt")
-```
-
-```
-subject_train <- read.table("C:\\projects\\github\\R-projects\\1_gettingData\\UCI HAR Dataset\\train\\subject_train.txt")
-```
-
-subject_test <- read.table("C:\\projects\\github\\R-projects\\1_gettingData\\UCI HAR Dataset\\test\\subject_test.txt")
-```
+Hereis the explanation of the variables used in the code.
 
 
 ```
-merged_data <- rbind(train, test)
-```
-
-
-```
-mean <- matrix(data=NA, nrow=1, ncol=ncol(merged_data))
-```
-
-
-
-### Create a blank matrix to store standard deviation
-```
-std <- matrix(data=NA, nrow=1, ncol=ncol(merged_data))
-```
-
-
-
-```
-labeled_train <- cbind(train_label, train)
-```
-
-
-```
-labeled_test <- cbind(test_label, test)
+train ... data table from X_train.txt
 ```
 
 ```
-features <- read.table("C:\\projects\\github\\R-projects\\1_gettingData\\UCI HAR Dataset\\features.txt")
-features <- features[,2]
-features <- append("activity_labels", features)
-```
-
-
-```
-all_dataset <- rbind(labeled_train, labeled_test)
-```
-
-
-```
-subject_data <- rbind(subject_train, subject_test)
-all_dataset <- cbind(subject_data, all_dataset)
-```
-
-### Replace the numbers on subject_data with 
-```
-features <- append("subject", features)
-colnames(all_dataset) <- features
+test ... data table from X_test.txt
 ```
 
 ```
-consolidated_all_dataset <- aggregate(all_dataset, by=list(all_dataset[, 1], all_dataset[, 2]), FUN=mean, na.rm=TRUE)
-consolidated_all_dataset <- consolidated_all_dataset[, c(-3, -4)]
-colnames(consolidated_all_dataset) <- features
+train_label ... data table from y_train.txt
+```
+
+```
+test_label ... data table from y_test.txt
+```
+
+```
+activity_labels ... data table from activity_labels.txt
+```
+
+```
+subject_train ... data table from subject_train.txt
+```
+
+```
+subject_test ... data table from subject_test.txt
+```
+
+```
+merged_data ... combined data table (X_train.txt and X_test.txt)
+```
+
+```
+mean ... mean of each column values on merged_data
+```
+
+```
+std ... standard deviation of each column values on merged_data
+```
+
+```
+labeled_train ... combined train data with train's label data (y_train.txt)
+```
+
+```
+labeled_test ... combined train data with test's label data (y_test.txt)
+```
+
+```
+features ... data table from features.txt. Removed the first column and added "activity_labels" and "subject" as a first and second value on the code
+```
+
+```
+subject_data ... combined data table (subject_train and subject_test from above)
+```
+
+```
+all_dataset ... combined data table (labeled_train and labeled_test from above) first and then combine subject_data 
+```
+
+```
+consolidated_all_dataset ... grouped aggregated data table based on "activity_labels" and "subject" values from all_data
 ```
 
