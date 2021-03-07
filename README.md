@@ -130,7 +130,7 @@ mean_and_std <-all_dataset %>%
 ```
 
 ### 4. Appropriately labels the data set with descriptive variable names. 
-```
+```R
 names(mean_and_std) <- tolower(names(mean_and_std))
 names(mean_and_std) <- gsub("[.]", "", names(mean_and_std))
 names(mean_and_std) <- gsub("acc", "_accelerometer_", names(mean_and_std))
