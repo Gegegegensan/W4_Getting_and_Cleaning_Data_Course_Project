@@ -29,6 +29,7 @@ merged_data <- rbind(train, test)
 ```
 
 # 2. Extracts only the measurements on the mean and standard deviation for each measurement. 
+# 3. Uses descriptive activity names to name the activities in the data set
 
 ### Create a blank matrix to store mean
 ```R
@@ -55,8 +56,6 @@ for (i in 1:ncol(merged_data)) {
 }
 ```
 
-# 3. Uses descriptive activity names to name the activities in the data set
-
 ### Combine train dataset with the label
 ```R
 labeled_train <- cbind(train_label, train)
@@ -77,8 +76,6 @@ features <- features[,2]
 ```R
 features <- append("activity_labels", features)
 ```
-
-# 4. Appropriately labels the data set with descriptive variable names. 
 
 ### Add column names on labeled_train dataset corresponding to the names of the features
 ```R
@@ -126,11 +123,31 @@ features <- append("subject", features)
 colnames(all_dataset) <- features
 ```
 
+#  Extract only the measurements on the mean and standard deviation for each measurement. 
+```R
+mean_and_std <-all_dataset %>%
+  select(subject, activity_labels, contains("mean"), contains("std"))
+```
+
+### 4. Appropriately labels the data set with descriptive variable names. 
+```
+names(mean_and_std) <- tolower(names(mean_and_std))
+names(mean_and_std) <- gsub("[.]", "", names(mean_and_std))
+names(mean_and_std) <- gsub("acc", "_accelerometer_", names(mean_and_std))
+names(mean_and_std) <- gsub("freq", "_frequency_", names(mean_and_std))
+names(mean_and_std) <- gsub("^t", "_time_", names(mean_and_std))
+names(mean_and_std) <- gsub("^f", "_frequency_", names(mean_and_std))
+names(mean_and_std) <- gsub("gyro", "_gyroscope_", names(mean_and_std))
+names(mean_and_std) <- gsub("mag", "_magnitude_", names(mean_and_std))
+```
+
 # 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 ```R
-consolidated_all_dataset <- aggregate(all_dataset, by=list(all_dataset[, 1], all_dataset[, 2]), FUN=mean, na.rm=TRUE)
+consolidated_all_dataset <- aggregate(mean_and_std, by=list(all_dataset[, 1], all_dataset[, 2]), FUN=mean, na.rm=TRUE)
 consolidated_all_dataset <- consolidated_all_dataset[, c(-3, -4)]
 colnames(consolidated_all_dataset) <- features
+names(consolidated_all_dataset) <- gsub("Group.1", "subject", names(mean_and_std))
+names(consolidated_all_dataset) <- gsub("Group.2", "activity_labels", names(mean_and_std))
 ```
 
 ### Set the output location and export the data table to this text file : run_analysis_result.txt
